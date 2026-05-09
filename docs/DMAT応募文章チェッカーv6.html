@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DMAT若手枠 応募文章チェッカー</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',Meiryo,sans-serif;background:#f2f1ed;color:#1a1a1a;font-size:15px;line-height:1.75}
+.wrap{max-width:740px;margin:0 auto;padding:1.75rem 1.25rem 4rem}
+.app-title{font-size:17px;font-weight:700;letter-spacing:.03em;color:#0d2540;margin-bottom:.2rem}
+.app-meta{font-size:12px;color:#aaa;margin-bottom:.9rem}
+.card{background:#fff;border:1px solid #d8d4cc;border-radius:8px;margin-bottom:1.25rem;overflow:hidden}
+/* disclaimer */
+.disc{background:#fff;border:1px solid #d8d4cc;border-radius:8px;padding:12px 16px;margin-bottom:1.25rem;font-size:12.5px;line-height:1.8;color:#555}
+.disc-title{font-weight:700;color:#0d2540}
+/* guide */
+.g-btn{width:100%;text-align:left;padding:12px 16px;background:none;border:none;cursor:pointer;font-size:13px;font-weight:700;color:#0d2540;display:flex;justify-content:space-between;align-items:center;font-family:inherit}
+.g-btn:hover{background:#f8f7f4}
+.garr{font-size:10px;color:#aaa;transition:transform .2s}
+.g-btn.open .garr{transform:rotate(180deg)}
+.g-inner{display:none;border-top:1px solid #ede9e2;padding:12px 16px 16px}
+.g-inner.open{display:block}
+.tabs{display:flex;border:1px solid #d8d4cc;border-radius:6px;overflow:hidden;margin-bottom:12px}
+.tab{flex:1;padding:7px 0;font-size:12px;font-weight:600;text-align:center;cursor:pointer;background:#f8f7f4;color:#888;border:none;font-family:inherit;transition:all .15s}
+.tab.on{background:#0d2540;color:#fff}
+.tc{display:none}.tc.on{display:block}
+.tc-intro{font-size:12.5px;color:#555;line-height:1.7;margin-bottom:10px}
+.steps{display:grid;gap:8px}
+.st{display:flex;gap:10px;align-items:flex-start}
+.sn{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#0d2540;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.sl{font-size:12.5px;color:#333;line-height:1.65}
+.sl b{color:#0d2540;font-weight:700}
+.sl small{color:#888;font-size:11.5px;display:block;margin-top:1px}
+.g-foot{margin-top:10px;padding-top:10px;border-top:1px solid #ede9e2;font-size:11.5px;color:#aaa;line-height:1.6}
+/* inputs */
+.inp{padding:1.25rem}
+.flabel{font-size:13px;font-weight:700;color:#444;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
+.bdg{font-size:11px;font-weight:500;padding:2px 7px;border-radius:10px;margin-left:5px}
+.req{background:#fde8e8;color:#c0392b}
+.cc{font-size:12px;font-variant-numeric:tabular-nums;color:#ccc}
+.cc.warn{color:#e67e22}.cc.over{color:#e74c3c;font-weight:700}
+textarea{width:100%;min-height:120px;resize:vertical;padding:10px 12px;border:1px solid #d8d4cc;border-radius:6px;background:#fff;color:#1a1a1a;font-size:14px;line-height:1.85;font-family:inherit;transition:border-color .15s}
+textarea:focus{outline:none;border-color:#0d2540}
+textarea::placeholder{color:#ccc}
+/* radar */
+.rp{padding:1.25rem}
+.sec-title{font-size:13px;font-weight:700;color:#0d2540;margin-bottom:.9rem;display:flex;align-items:center;gap:6px}
+.auto-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;background:#e8f0fb;color:#1a4080}
+.rl{display:grid;grid-template-columns:1fr 210px;gap:1.25rem;align-items:start}
+@media(max-width:560px){.rl{grid-template-columns:1fr}}
+.axis-scores{display:grid;gap:9px}
+.sec-label{font-size:11px;color:#aaa;font-weight:600;letter-spacing:.03em;margin-bottom:2px}
+.sec-divider{border-top:1px solid #e0dcd5;margin:4px 0 6px;padding-top:2px}
+.ax{display:flex;flex-direction:column;gap:2px}
+.ax-hd{display:flex;justify-content:space-between;align-items:center}
+.ax-name{font-size:12px;font-weight:700;color:#333}
+.ax-num{font-size:12px;font-weight:700}
+.ax-bar-bg{height:5px;background:#e8e5df;border-radius:3px;overflow:hidden}
+.ax-bar-fill{height:5px;border-radius:3px;transition:width .4s,background .4s}
+.ax-cmt{font-size:11px;color:#888;line-height:1.5;margin-top:1px}
+.cw{max-width:210px;margin:0 auto}
+.trow{display:flex;align-items:center;gap:10px;margin-top:.9rem;padding:9px 13px;background:#f0f3f8;border-radius:6px}
+.tlbl{font-size:12px;color:#666;white-space:nowrap;font-weight:700}
+.tn{font-size:23px;font-weight:700;color:#0d2540;line-height:1}
+.td{font-size:13px;color:#bbb;margin-left:1px}
+.ttrack{flex:1;height:5px;background:#d4dae8;border-radius:3px;overflow:hidden}
+.tfill{height:5px;background:#0d2540;border-radius:3px;transition:width .4s}
+.r-empty{font-size:12.5px;color:#bbb;text-align:center;padding:2rem 0}
+/* overlap */
+.ovlp{padding:1.25rem}
+.ovbox{padding:11px 14px;border-radius:6px;font-size:13px;line-height:1.75;margin-bottom:8px}
+.ovbox:last-child{margin-bottom:0}
+.ov-red{background:#fde8e8;border:1px solid #f5a0a0;color:#7a1010}
+.ov-yel{background:#fff8e0;border:1px solid #f5d070;color:#6b4000}
+.ov-grn{background:#edf9f2;border:1px solid #7ec8a0;color:#0f4826}
+.ov-title{font-weight:700;margin-bottom:3px}
+.ov-note{font-size:11.5px;margin-top:5px;opacity:.85}
+.ov-empty{font-size:12.5px;color:#bbb;text-align:center;padding:1.5rem 0}
+/* 物語度 */
+.mp{padding:1.25rem}
+.mrow{display:flex;align-items:baseline;gap:8px;margin-bottom:.6rem}
+.mscore{font-size:28px;font-weight:700;line-height:1;min-width:40px;transition:color .4s}
+.mdenom{font-size:13px;color:#bbb}
+.mcat{font-size:13px;font-weight:700;padding:3px 10px;border-radius:10px}
+.cat0{background:#fde8e8;color:#b03020}
+.cat1{background:#fff4e0;color:#7a4a00}
+.cat2{background:#e8f4ff;color:#0d4080}
+.cat3{background:#edf9f2;color:#1a6040}
+.mtrack{height:12px;background:#e8e5df;border-radius:6px;overflow:hidden;margin-bottom:.4rem}
+.mfill{height:12px;border-radius:6px;transition:width .5s,background .5s}
+.mlabels{display:flex;justify-content:space-between;font-size:10px;color:#ccc;margin-bottom:.75rem}
+.charinfo{font-size:12px;color:#888;margin-bottom:.75rem;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.sigs{display:grid;gap:5px}
+.sig{font-size:12px;padding:5px 9px;border-radius:4px;line-height:1.6;display:flex;gap:7px;align-items:flex-start}
+.sig-p{background:#edf9f2;color:#1a5a30;border-left:3px solid #27ae60}
+.sig-n{background:#fef6f0;color:#7a3010;border-left:3px solid #e67e22}
+.sig-w{background:#fff8e0;color:#6b4800;border-left:3px solid #f0a500}
+.sig-i{flex-shrink:0;font-size:11px;font-weight:700;margin-top:1px}
+.m-empty{font-size:12.5px;color:#bbb;text-align:center;padding:1.5rem 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="app-title">DMAT若手枠 応募文章チェッカー</div>
+  <div class="app-meta">東京医療減災Labo ／ 内部利用限定</div>
+
+  <div class="disc">
+    <span class="disc-title">このチェッカーについて</span><br>
+    このツールは、高得点・満点を取れば採択されるというものではありません。自分の経験と覚悟を、自分の言葉で論理的に表現するための練習ツールです。採択の最終判断は事務局の複数名が応募文章を読み、平均点で決まります。その判断プロセスに直接介入する手段はありません。このアプリができるのは、「あなたの文章があなたらしい物語になっているか」を確認する支援だけです。
+  </div>
+
+  <!-- guide -->
+  <div class="card">
+    <button class="g-btn" id="gbtn" onclick="toggleGuide()">
+      応募文章の書き方ガイド ― 1,000字であなたの物語を語る
+      <span class="garr">▼</span>
+    </button>
+    <div class="g-inner" id="ginner">
+      <div class="tabs">
+        <button class="tab on" onclick="switchTab(0)">採択文の基本構造</button>
+        <button class="tab" onclick="switchTab(1)">受講希望理由の構成</button>
+        <button class="tab" onclick="switchTab(2)">キャリアプランの構成</button>
+      </div>
+      <div class="tc on" id="tc0">
+        <p class="tc-intro">受講希望理由（過去→現在）とキャリアプラン（現在→未来）は合わせて1,000字の物語です。採択文はすべてこの時間軸が明確でした。</p>
+        <div class="steps">
+          <div class="st"><div class="sn">1</div><div class="sl"><b>具体的な原体験</b><small>東日本大震災・武漢帰国者対応など。実際の出来事と、そこで感じた無力感・悔しさ・使命感</small></div></div>
+          <div class="st"><div class="sn">2</div><div class="sl"><b>現状の実績・資格</b><small>職種・勤務先・経験年数・取得資格（MCLS・JPTEC・ACLS等）を具体的に</small></div></div>
+          <div class="st"><div class="sn">3</div><div class="sl"><b>なぜ今DMATか（限界の論拠）</b><small>感情ではなく論理で。現在の自分に何が足りないか、DMATでしか得られないものを1文で</small></div></div>
+          <div class="st"><div class="sn">4</div><div class="sl"><b>段階的な将来像と還元視点</b><small>取得→インストラクター→統括→DMAT事務局/施設本部長。「自分のため」でなく自施設・地域・日本への還元を明示</small></div></div>
+        </div>
+        <div class="g-foot">字数は500字をほぼ使い切ること。自己PR一辺倒にならず「なぜDMATが必要か」の論拠を文章の軸に置くこと。</div>
+      </div>
+      <div class="tc" id="tc1">
+        <p class="tc-intro">受講希望理由（500字）= 過去→現在の物語。将来のキャリアステップはここには書きません。</p>
+        <div class="steps">
+          <div class="st"><div class="sn">1</div><div class="sl"><b>原体験（1〜2文）</b><small>災害や臨床での具体的な経験と、そこで感じた感情。「いつ・どこで・何があって・どう感じたか」</small></div></div>
+          <div class="st"><div class="sn">2</div><div class="sl"><b>現在の立場と実績（1〜2文）</b><small>職種・勤務先・経験年数を簡潔に。読み手が「この人は誰か」を判断できる情報</small></div></div>
+          <div class="st"><div class="sn">3</div><div class="sl"><b>現在の限界・なぜDMATが必要か（2〜3文）</b><small>論理的に。現在の自分に何が足りないか、DMATでしか解決できないことを明示</small></div></div>
+          <div class="st"><div class="sn">4</div><div class="sl"><b>DMATで何を得て、どう活かすか（1〜2文）</b><small>「還元」より「誰に・何を・どうやって」を書く</small></div></div>
+        </div>
+      </div>
+      <div class="tc" id="tc2">
+        <p class="tc-intro">キャリアプラン（500字）= 現在→未来の物語。長期ビジョンを先に示し段階的に展開します。</p>
+        <div class="steps">
+          <div class="st"><div class="sn">1</div><div class="sl"><b>最終目標（1文）</b><small>大きなビジョンを先に示す。「災害本部長」「DMAT事務局」など具体的な到達点</small></div></div>
+          <div class="st"><div class="sn">2</div><div class="sl"><b>段階的なステップ（3〜4文）</b><small>DMAT取得→インストラクター→統括DMAT→管理職/事務局 という時系列で</small></div></div>
+          <div class="st"><div class="sn">3</div><div class="sl"><b>自施設・地域・国への貢献（2〜3文）</b><small>「還元」より「誰に・何を・どうやって」。後進育成・体制構築・教育活動の具体像</small></div></div>
+          <div class="st"><div class="sn">4</div><div class="sl"><b>覚悟・姿勢（1文）</b><small>読み手に「この人は本気だ」と感じさせる宣言的な締めの1文</small></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- inputs -->
+  <div class="card inp">
+    <div class="flabel">
+      受講希望理由 ― 過去→現在<span class="bdg req">必須</span>
+      <span class="cc" id="cc1">0 / 500字</span>
+    </div>
+    <textarea id="t1" placeholder="500字以内で記入してください。" oninput="onInput()" style="margin-bottom:1rem"></textarea>
+    <div class="flabel">
+      キャリアプラン ― 現在→未来<span class="bdg req">必須</span>
+      <span class="cc" id="cc2">0 / 500字</span>
+    </div>
+    <textarea id="t2" placeholder="500字以内で記入してください。" oninput="onInput()"></textarea>
+  </div>
+
+  <!-- radar -->
+  <div class="card rp">
+    <div class="sec-title">5軸診断 <span class="auto-badge">自動判定</span></div>
+    <div class="rl">
+      <div class="axis-scores" id="axscores"><div class="r-empty">文章を入力すると自動で判定します</div></div>
+      <div>
+        <div class="cw"><canvas id="rc" width="210" height="210"></canvas></div>
+        <div class="trow">
+          <span class="tlbl">合計</span>
+          <span><span class="tn" id="totn">—</span><span class="td"> / 15点</span></span>
+          <div class="ttrack"><div class="tfill" id="totf" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- overlap -->
+  <div class="card ovlp">
+    <div class="sec-title">受講希望理由 ／ キャリアプラン 整合チェック <span class="auto-badge">自動判定</span></div>
+    <div id="ovlp-body"><div class="ov-empty">両方の文章を入力すると整合チェックを行います</div></div>
+  </div>
+
+  <!-- 物語度 -->
+  <div class="card mp">
+    <div class="sec-title">あなたの物語度 ― 総合判断 <span class="auto-badge">自動判定</span></div>
+    <div id="mono-body"><div class="m-empty">文章を入力すると物語度を計算します</div></div>
+  </div>
+</div>
+
+<script>
+// ── キーワード定義 ─────────────────────────────────
+const KW_A=['インストラクター','統括DMAT','ディレクター','本部長','事務局'];
+const KW_B=['取得後','将来的には','最終的には','いずれは','を目指し','を経て','長期的には'];
+const KW_C=['後進育成','人材育成','体制構築','次世代','教育活動'];
+const QUALIF_SHORT=['MCLS','JPTEC','JNTEC','ICLS','ACLS','PALS','JATEC','東京DMAT'];
+const QUALIF_ALL=[...QUALIF_SHORT,'COVID','武漢','東日本大震災','阪神','熊本地震'];
+const EMOTION=['悔し','無力','恐怖','使命','責任','焦り','悲し','震え','衝撃','忘れられ','悔やん',
+  '決意','覚悟','苦し','辛か','辛く','痛感','動揺','愕然','歯がゆ','もどかし','情けな','奮い','誓','矜持','腹立'];
+const DISASTER=['東日本大震災','阪神','熊本地震','COVID','武漢','感染症対応','大規模災害','被災'];
+const RETSUJO=['まず、','次に、','さらに、','加えて、','また、','最後に、'];
+const TEINEI=['と考えております','と感じております','と思っております','てまいりたい','していきたいと思','できるよう努め'];
+const CHUSHO=['貢献','活躍','発展','推進','向上','尽力'];
+const LIMIT_W=['不十分','足りない','不足','限界','ベーシック','基礎的','できない','わからない','及ばな'];
+const REASON_W=['そのため','ためには','からこそ','それゆえ','であるから'];
+const KONKEI=[/20\d\d年/g,/令和\d+年/g,/平成\d+年/g,/\d+年目/g,/\d+年間/g,/\d+か月/g,/\d+ヶ月/g,/\d+例/g,/\d+人/g];
+
+const AXES=['①原体験の具体性','②現状実績の提示','③現状の限界の論拠','④将来像の具体性・段階性','⑤還元視点'];
+const ACMTS=[
+  ['体験の記述がありません。「いつ・どこで・何が起きて・どう感じたか」を1文で書いてみてください。',
+   '体験の断片はありますが感情の言語化が薄い状態です。その場で感じた「決意・覚悟・悔しさ・無力感」を1文加えましょう。',
+   '体験と動機は書かれています。その場で感じた感情（決意・覚悟・悔しさ・無力感など）を明示的に1文で書くと、読み手にさらに刺さります。',
+   '原体験として十分に機能しています。'],
+  ['職種・経験年数の記載が見当たりません。「○○として△△に勤務するN年目です」という形で1〜2文追加してください。',
+   '役職か勤務先の記載はあります。経験年数や取得資格（MCLS・JPTEC等）を加えると読み手が「この人は誰か」を判断しやすくなります。',
+   '主要情報は揃っています。取得資格（MCLS・JPTEC等）や活動歴があれば追加すると補強できます。',
+   '実績提示として十分です。'],
+  ['「あなたが災害医療に向き合おうとした最初の瞬間」を1文で書いてみてください。その瞬間が、なぜ今DMATでなければならないかの答えになります。',
+   '必要性への言及はありますが論拠が薄い。「現在できていないこと」と「DMATで解決できること」を対比させてください。',
+   '論拠の骨格はあります。「DMATの実践的継続トレーニングで具体的に何を習得したいか」をもう少し明示できます。',
+   '論拠として成立しています。'],
+  ['将来ビジョンが読み取れません。キャリアプランに「DMAT取得後の最初の1年で何をしたいか」を書いてみてください。',
+   '方向性は示されています。「目指すゴールは〜だ」という最終到達点を冒頭か末尾で1文宣言するとさらに明確になります。',
+   '段階の記述はあります。「目指すゴールは〜だ」という最終到達点を冒頭か末尾で1文宣言するとさらに明確になります。',
+   '将来像として機能しています。'],
+  ['「誰のために・何のために」という視点が薄いです。具体的な還元先を1文追加してください。',
+   '還元への意識はあります。具体的な還元先（自施設・地域・後進育成等）を明示してください。',
+   '還元先は書かれています。「どのように還元するか」をもう少し具体化できます。',
+   '還元視点として機能しています。']
+];
+
+// ── 自動スコアリング ──────────────────────────────
+function autoScore(t1,t2){
+  const t1l=t1||'', t2l=t2||'';
+
+  // ①原体験
+  const hasDisaster=DISASTER.some(k=>t1l.includes(k));
+  const hasEmotion=EMOTION.some(e=>t1l.includes(e));
+  let hasDate=false;
+  KONKEI.forEach(r=>{if(r.test(t1l))hasDate=true; r.lastIndex=0;});
+  let s0=0;
+  if(hasDisaster&&hasEmotion) s0=3;
+  else if(hasDisaster||(hasEmotion&&hasDate)) s0=2;
+  else if(hasEmotion||t1l.includes('経験')||t1l.includes('体験')) s0=1;
+
+  // ②実績 - 「〜として」パターンで職種を汎用検出
+  const qHits=QUALIF_SHORT.filter(q=>t1l.includes(q)).length;
+  const hasYrs=/\d+年目|\d+年間/.test(t1l);
+  const hasRole=/\S{1,10}として/.test(t1l);
+  const hasFacility=['センター','病院','クリニック','救急','ICU','ER','当院','自院','診療科'].some(k=>t1l.includes(k));
+  let s1=0;
+  if(qHits>0&&hasYrs&&hasRole) s1=3;
+  else if((hasRole&&hasYrs)||(qHits>0&&hasRole)||(hasRole&&hasFacility)) s1=2;
+  else if(hasRole||hasFacility||qHits>0) s1=1;
+
+  // ③限界の論拠
+  const hasLimit=LIMIT_W.some(w=>t1l.includes(w));
+  const hasReason=REASON_W.some(w=>t1l.includes(w));
+  let s2=0;
+  if(hasLimit&&hasReason) s2=3;
+  else if(hasLimit) s2=2;
+  else if(['必要','重要','必須','不可欠'].some(w=>t1l.includes(w))) s2=1;
+
+  // ④将来像 - 役職・資格名の複数出現で段階性を判定
+  const kwA2=KW_A.filter(k=>t2l.includes(k)).length;
+  const kwB2=KW_B.filter(k=>t2l.includes(k)).length;
+  const hasAction=['を作る','を構築','を整備','を策定','仕組みを','体制を','を目指'].some(w=>t2l.includes(w));
+  let s3=0;
+  if(t2l.length>0){
+    if(kwA2>=2) s3=3;
+    else if(kwA2>=1&&(kwB2>=1||hasAction)) s3=3;
+    else if(kwA2>=1||kwB2>=2) s3=2;
+    else if(['目指','貢献','活動したい'].some(w=>t2l.includes(w))||hasAction) s3=1;
+  }
+
+  // ⑤還元視点
+  const all=t1l+' '+t2l;
+  const tgts=['自施設','地域','後進','次世代','自院','病院'].filter(k=>all.includes(k)).length;
+  const hows=['育成','体制','教育','訓練','指導','整備','構築'].filter(k=>all.includes(k)).length;
+  let s4=0;
+  if(tgts>=2&&hows>=1) s4=3;
+  else if(tgts>=1||hows>=1) s4=2;
+  else if(all.includes('還元')||all.includes('貢献')) s4=1;
+
+  return [s0,s1,s2,s3,s4];
+}
+
+function barColor(s){
+  return s===3?'#27ae60':s===2?'#2980b9':s===1?'#e67e22':'#c0c0c0';
+}
+
+// ── Chart.js ─────────────────────────────────────
+let chart=null;
+function initChart(){
+  const ctx=document.getElementById('rc').getContext('2d');
+  chart=new Chart(ctx,{
+    type:'radar',
+    data:{
+      labels:['原体験','実績提示','限界の論拠','将来像','還元視点'],
+      datasets:[
+        {label:'理想',data:[3,3,3,3,3],fill:true,backgroundColor:'rgba(200,200,200,0.1)',
+         borderColor:'rgba(180,180,180,0.4)',borderDash:[4,3],borderWidth:1.5,pointRadius:0},
+        {label:'判定',data:[0,0,0,0,0],fill:true,backgroundColor:'rgba(13,37,64,0.1)',
+         borderColor:'rgba(13,37,64,0.75)',borderWidth:2,pointBackgroundColor:'rgba(13,37,64,0.85)',pointRadius:4}
+      ]
+    },
+    options:{responsive:true,plugins:{legend:{display:false}},
+      scales:{r:{min:0,max:3,ticks:{stepSize:1,font:{size:10},color:'#aaa',backdropColor:'transparent'},
+        pointLabels:{font:{size:10},color:'#555'},
+        grid:{color:'rgba(0,0,0,0.07)'},angleLines:{color:'rgba(0,0,0,0.07)'}}}}
+  });
+}
+
+function refreshRadar(scores){
+  const el=document.getElementById('axscores');
+  const total=scores.reduce((a,b)=>a+b,0);
+  let html='';
+  scores.forEach(function(s,i){
+    if(i===0) html+='<div class="sec-label">受講希望理由（過去→現在）</div>';
+    if(i===3) html+='<div class="sec-divider"><div class="sec-label">キャリアプラン（現在→未来）</div></div>';
+    html+='<div class="ax">'
+      +'<div class="ax-hd">'
+      +'<span class="ax-name">'+AXES[i]+'</span>'
+      +'<span class="ax-num" style="color:'+barColor(s)+'">'+s+' / 3</span>'
+      +'</div>'
+      +'<div class="ax-bar-bg"><div class="ax-bar-fill" style="width:'+(s/3*100)+'%;background:'+barColor(s)+'"></div></div>'
+      +'<div class="ax-cmt">'+ACMTS[i][s]+'</div>'
+      +'</div>';
+  });
+  el.innerHTML=html;
+  document.getElementById('totn').textContent=total;
+  document.getElementById('totf').style.width=(total/15*100)+'%';
+  if(chart){chart.data.datasets[1].data=scores.slice();chart.update();}
+}
+
+// ── 整合チェック ──────────────────────────────────
+function checkOverlap(t1,t2){
+  const el=document.getElementById('ovlp-body');
+  if(!t1||!t2){
+    el.innerHTML='<div class="ov-empty">両方の文章を入力すると整合チェックを行います</div>';
+    return;
+  }
+  const msgs=[];
+  const half=t1.slice(Math.floor(t1.length/2));
+  const halfA=KW_A.filter(function(k){return half.includes(k);});
+  const allA=KW_A.filter(function(k){return t1.includes(k);});
+  const allB=KW_B.filter(function(k){return t1.includes(k);});
+  let level=0;
+  if(halfA.length>=2) level=2;
+  else if(allA.length>=1||allB.length>=2) level=1;
+
+  if(level===2){
+    msgs.push({cls:'ov-red',title:'志望動機とキャリアプランの内容がかなり一致しています',
+      body:'受講希望理由は「過去→現在」、キャリアプランは「現在→未来」で整理し直しましょう。将来の役職・ステップは受講希望理由から移してください。',
+      note:halfA.length>0?'該当語：「'+halfA.join('」「')+'」':''});
+  } else if(level===1){
+    const hits=allA.concat(allB.filter(function(k){return half.includes(k);}))
+      .filter(function(v,i,a){return a.indexOf(v)===i;});
+    msgs.push({cls:'ov-yel',title:'受講希望理由に将来のビジョンが入り込んでいます',
+      body:'受講希望理由は動機・現状の話として整理し、キャリアステップや役職名はキャリアプランに移しましょう。',
+      note:hits.length>0?'該当語：「'+hits.join('」「')+'」':''});
+  } else {
+    msgs.push({cls:'ov-grn',title:'受講希望理由とキャリアプランの役割分担ができています',
+      body:'「過去→現在→未来」の時間軸が整理されています。',note:''});
+  }
+  if(allA.length>0){
+    msgs.push({cls:'ov-yel',title:'役職・資格名は手段です',
+      body:'「'+allA.join('」「')+'」は将来のキャリアステップです。受講希望理由には「その先に何を実現したいか」という動機の核心を書きましょう。',
+      note:''});
+  }
+  if(t1.includes('還元')&&t2.includes('還元')){
+    msgs.push({cls:'ov-yel',title:'「還元」が両方の文章に使われています',
+      body:'便利な言葉ですが曖昧です。誰に・何を・どうやって届けるのかを具体的に書き換えましょう。',
+      note:'例：「自施設の訓練体系を整備する」「後輩が現場で判断できる力を育てる場をつくる」'});
+  }
+  var html='';
+  msgs.forEach(function(m){
+    html+='<div class="ovbox '+m.cls+'">'
+      +'<div class="ov-title">'+m.title+'</div>'+m.body
+      +(m.note?'<div class="ov-note">'+m.note+'</div>':'')
+      +'</div>';
+  });
+  el.innerHTML=html;
+}
+
+// ── 物語度 ───────────────────────────────────────
+function calcMono(text){
+  if(!text||text.length<30) return null;
+  var pos=0, neg=0;
+  QUALIF_ALL.forEach(function(q){if(text.includes(q))pos+=5;});
+  KONKEI.forEach(function(r){var m=text.match(r);if(m)pos+=Math.min(m.length*3,9);r.lastIndex=0;});
+  EMOTION.forEach(function(e){if(text.includes(e))pos+=6;});
+  if(text.includes('私は')||text.includes('自分は')) pos+=3;
+  var rc=RETSUJO.reduce(function(s,w){return s+(text.split(w).length-1);},0);
+  if(rc>=3) neg+=(rc-2)*5;
+  var tc=TEINEI.reduce(function(s,w){return s+(text.split(w).length-1);},0);
+  if(tc>=3) neg+=(tc-2)*4;
+  var cc=CHUSHO.reduce(function(s,w){return s+(text.split(w).length-1);},0);
+  if(cc>=4) neg+=(cc-3)*3;
+  var sents=text.split(/[。！？]/).filter(function(s){return s.trim().length>5;});
+  if(sents.length>0){var avg=text.length/sents.length;if(avg>70)neg+=Math.min(Math.round((avg-70)*0.4),12);}
+  return Math.min(100,Math.round(Math.max(0,pos-neg)*2.2));
+}
+
+function getSignals(text){
+  var out=[];
+  if(!text||text.length<30) return out;
+  var qh=QUALIF_ALL.filter(function(q){return text.includes(q);});
+  if(qh.length>0) out.push({t:'p',m:'固有名詞あり（'+qh.slice(0,3).join('・')+'）'});
+  var dh=false;
+  KONKEI.forEach(function(r){if(r.test(text))dh=true;r.lastIndex=0;});
+  if(dh) out.push({t:'p',m:'具体的な年数・数字が含まれています'});
+  var eh=EMOTION.filter(function(e){return text.includes(e);});
+  if(eh.length>0) out.push({t:'p',m:'感情語あり（'+eh.slice(0,2).join('・')+'）'});
+  var rc=RETSUJO.reduce(function(s,w){return s+(text.split(w).length-1);},0);
+  if(rc>=3) out.push({t:'n',m:'列挙接続詞が'+rc+'回（まず・次に・さらに等）'});
+  var tc=TEINEI.reduce(function(s,w){return s+(text.split(w).length-1);},0);
+  if(tc>=3) out.push({t:'n',m:'「〜と考えております」系の表現が'+tc+'回連続しています'});
+  var sents=text.split(/[。！？]/).filter(function(s){return s.trim().length>5;});
+  if(sents.length>0&&text.length/sents.length>70)
+    out.push({t:'n',m:'平均文長 '+Math.round(text.length/sents.length)+'字（目安60字以下）'});
+  if(text.includes('還元')) out.push({t:'w',m:'「還元」→ 誰に・何を・どうやって、に書き換えましょう'});
+  return out;
+}
+
+function refreshMono(t1,t2){
+  var el=document.getElementById('mono-body');
+  var t1len=(t1||'').length, t2len=(t2||'').length;
+  var totalLen=t1len+t2len;
+  var combined=(t1||'')+' '+(t2||'');
+  var score=calcMono(combined.trim());
+  if(score===null){el.innerHTML='<div class="m-empty">文章を入力すると物語度を計算します</div>';return;}
+  var catIdx,catText,color;
+  if(score<25){catIdx=0;catText='声が届きません';color='#e74c3c';}
+  else if(score<50){catIdx=1;catText='あなたらしさが見え始めている';color='#e67e22';}
+  else if(score<75){catIdx=2;catText='あなたの物語が伝わっている';color='#2980b9';}
+  else{catIdx=3;catText='強い個の声がある';color='#27ae60';}
+  var sigs=getSignals(combined.trim());
+  var sigsHtml=sigs.map(function(s){
+    var icon=s.t==='p'?'＋':s.t==='n'?'－':'！';
+    return '<div class="sig sig-'+s.t+'"><span class="sig-i">'+icon+'</span>'+s.m+'</div>';
+  }).join('');
+  var charColor=totalLen>=900?'#27ae60':totalLen>=700?'#e67e22':'#e74c3c';
+  var hints=[];
+  if(!QUALIF_ALL.some(function(q){return combined.includes(q);}))
+    hints.push('資格名・災害名（MCLS・JPTEC・東日本大震災など）を入れるとスコアが上がります');
+  var noDate=true;
+  KONKEI.forEach(function(r){if(r.test(combined))noDate=false;r.lastIndex=0;});
+  if(noDate) hints.push('具体的な年・年数（20XX年、○年間など）を入れるとスコアが上がります');
+  if(!EMOTION.some(function(e){return combined.includes(e);}))
+    hints.push('感情語（決意・覚悟・悔しさ・無力感・痛感など）を入れるとスコアが上がります');
+  if(totalLen<700) hints.push('より具体的な言葉を追加していきましょう（固有名詞・年数・感情語）');
+  else if(totalLen<900) hints.push('字数を使い切るほど、物語に厚みが出ます');
+  var hintsHtml=hints.map(function(h){
+    return '<div class="sig sig-w"><span class="sig-i">→</span>'+h+'</div>';
+  }).join('');
+  el.innerHTML=
+    '<div class="mrow">'
+    +'<span class="mscore" style="color:'+color+'">'+score+'</span>'
+    +'<span class="mdenom">/ 100</span>'
+    +'<span class="mcat cat'+catIdx+'">'+catText+'</span>'
+    +'</div>'
+    +'<div class="mtrack"><div class="mfill" style="width:'+score+'%;background:'+color+'"></div></div>'
+    +'<div class="mlabels"><span>声が届かない</span><span>あなたらしさが出ている</span><span>強い個の声</span></div>'
+    +'<div class="charinfo">'
+    +'<span>1,000字の物語：</span>'
+    +'<span style="color:#0d2540;font-weight:700">'+t1len+'字</span><span>（受講）＋</span>'
+    +'<span style="color:#0d2540;font-weight:700">'+t2len+'字</span><span>（キャリア）＝</span>'
+    +'<span style="color:'+charColor+';font-weight:700">'+totalLen+'字</span>'
+    +'<span style="color:#ccc">/ 1,000字</span>'
+    +'</div>'
+    +'<div class="sigs">'+sigsHtml+'</div>'
+    +'<div class="sigs" style="margin-top:5px">'+hintsHtml+'</div>';
+}
+
+// ── イベント ─────────────────────────────────────
+function onInput(){
+  var t1=document.getElementById('t1').value.trim();
+  var t2=document.getElementById('t2').value.trim();
+  ['1','2'].forEach(function(n){
+    var v=document.getElementById('t'+n).value;
+    var e=document.getElementById('cc'+n);
+    e.textContent=v.length+' / 500字';
+    e.className='cc'+(v.length>500?' over':v.length>450?' warn':'');
+  });
+  if(!t1){
+    document.getElementById('axscores').innerHTML='<div class="r-empty">文章を入力すると自動で判定します</div>';
+    document.getElementById('totn').textContent='—';
+    document.getElementById('totf').style.width='0%';
+    if(chart){chart.data.datasets[1].data=[0,0,0,0,0];chart.update();}
+    document.getElementById('ovlp-body').innerHTML='<div class="ov-empty">両方の文章を入力すると整合チェックを行います</div>';
+    document.getElementById('mono-body').innerHTML='<div class="m-empty">文章を入力すると物語度を計算します</div>';
+    return;
+  }
+  var sc=autoScore(t1,t2);
+  refreshRadar(sc);
+  checkOverlap(t1,t2);
+  refreshMono(t1,t2);
+}
+
+function toggleGuide(){
+  var b=document.getElementById('gbtn'),i=document.getElementById('ginner');
+  var o=!i.classList.contains('open');
+  i.classList.toggle('open',o);
+  b.classList.toggle('open',o);
+}
+function switchTab(i){
+  document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('on',j===i);});
+  document.querySelectorAll('.tc').forEach(function(t,j){t.classList.toggle('on',j===i);});
+}
+
+initChart();
+</script>
+</body>
+</html>
