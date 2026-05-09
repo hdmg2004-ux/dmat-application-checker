@@ -4,6 +4,8 @@
 
 **制作：東京医療減災Labo**　／　**内部利用限定**
 
+URL:https://hdmg2004-ux.github.io/dmat-application-checker/
+
 ---
 
 ## ツールの目的
