@@ -108,7 +108,7 @@ textarea::placeholder{color:#ccc}
 
   <div class="disc">
     <span class="disc-title">このチェッカーについて</span><br>
-    このツールで、高得点・満点を取れば採択されるというものではありません。自分の経験と覚悟を、自分の言葉で論理的に表現するための練習ツールです。採択の最終判断は事務局の複数名が応募文章を読み、平均点で決まります。その判断プロセスに直接介入する手段はありません。このアプリができるのは、「あなたの文章があなたらしい物語になっているか」を確認する支援だけです。
+    このツールは、高得点・満点を取れば採択されるというものではありません。自分の経験と覚悟を、自分の言葉で論理的に表現するための練習ツールです。採択の最終判断は事務局の複数名が応募文章を読み、平均点で決まります。その判断プロセスに直接介入する手段はありません。このアプリができるのは、「あなたの文章があなたらしい物語になっているか」を確認する支援だけです。
   </div>
 
   <!-- guide -->
@@ -124,7 +124,7 @@ textarea::placeholder{color:#ccc}
         <button class="tab" onclick="switchTab(2)">キャリアプランの構成</button>
       </div>
       <div class="tc on" id="tc0">
-        <p class="tc-intro">受講希望理由（過去→現在）とキャリアプラン（現在→未来）は合わせて1,000字の物語です。採択文はすべてこの時間軸が明確でした。</p>
+        <p class="tc-intro">受講希望理由（過去→現在）とキャリアプラン（現在→未来）は合わせて1,000字の物語です。採択文はすべてこの時間軸が明確でした。医師・看護師に限らず、業務調整員を目指す方の合格者も、この構造で書いています。</p>
         <div class="steps">
           <div class="st"><div class="sn">1</div><div class="sl"><b>具体的な原体験</b><small>東日本大震災・武漢帰国者対応など。実際の出来事と、そこで感じた無力感・悔しさ・使命感</small></div></div>
           <div class="st"><div class="sn">2</div><div class="sl"><b>現状の実績・資格</b><small>職種・勤務先・経験年数・取得資格（MCLS・JPTEC・ACLS等）を具体的に</small></div></div>
@@ -141,11 +141,12 @@ textarea::placeholder{color:#ccc}
           <div class="st"><div class="sn">3</div><div class="sl"><b>現在の限界・なぜDMATが必要か（2〜3文）</b><small>論理的に。現在の自分に何が足りないか、DMATでしか解決できないことを明示</small></div></div>
           <div class="st"><div class="sn">4</div><div class="sl"><b>DMATで何を得て、どう活かすか（1〜2文）</b><small>「還元」より「誰に・何を・どうやって」を書く</small></div></div>
         </div>
+        <div class="g-foot">業務調整員を目指す方へ：原体験は「処置ができなかった」でなくてよい。「現場を知らないまま設計している」というギャップや、「関わりたくても資格がなく関われなかった」という挫折も、そのまま原体験になります。</div>
       </div>
       <div class="tc" id="tc2">
         <p class="tc-intro">キャリアプラン（500字）= 現在→未来の物語。長期ビジョンを先に示し段階的に展開します。</p>
         <div class="steps">
-          <div class="st"><div class="sn">1</div><div class="sl"><b>最終目標（1文）</b><small>大きなビジョンを先に示す。「災害本部長」「DMAT事務局」など具体的な到達点</small></div></div>
+          <div class="st"><div class="sn">1</div><div class="sl"><b>最終目標（1文）</b><small>大きなビジョンを先に示す。「災害本部長」「DMAT事務局」など具体的な到達点。DMATとして、自施設でチームを率いる立場を目指す姿勢が伝わると強い。</small></div></div>
           <div class="st"><div class="sn">2</div><div class="sl"><b>段階的なステップ（3〜4文）</b><small>DMAT取得→インストラクター→統括DMAT→管理職/事務局 という時系列で</small></div></div>
           <div class="st"><div class="sn">3</div><div class="sl"><b>自施設・地域・国への貢献（2〜3文）</b><small>「還元」より「誰に・何を・どうやって」。後進育成・体制構築・教育活動の具体像</small></div></div>
           <div class="st"><div class="sn">4</div><div class="sl"><b>覚悟・姿勢（1文）</b><small>読み手に「この人は本気だ」と感じさせる宣言的な締めの1文</small></div></div>
@@ -199,18 +200,18 @@ textarea::placeholder{color:#ccc}
 
 <script>
 // ── キーワード定義 ─────────────────────────────────
-const KW_A=['インストラクター','統括DMAT','ディレクター','本部長','事務局'];
+const KW_A=['インストラクター','統括DMAT','ディレクター','本部長','事務局','コーディネーター','コーディネーション','本部'];
 const KW_B=['取得後','将来的には','最終的には','いずれは','を目指し','を経て','長期的には'];
 const KW_C=['後進育成','人材育成','体制構築','次世代','教育活動'];
 const QUALIF_SHORT=['MCLS','JPTEC','JNTEC','ICLS','ACLS','PALS','JATEC','東京DMAT'];
 const QUALIF_ALL=[...QUALIF_SHORT,'COVID','武漢','東日本大震災','阪神','熊本地震'];
 const EMOTION=['悔し','無力','恐怖','使命','責任','焦り','悲し','震え','衝撃','忘れられ','悔やん',
   '決意','覚悟','苦し','辛か','辛く','痛感','動揺','愕然','歯がゆ','もどかし','情けな','奮い','誓','矜持','腹立'];
-const DISASTER=['東日本大震災','阪神','熊本地震','COVID','武漢','感染症対応','大規模災害','被災'];
+const DISASTER=['東日本大震災','阪神','熊本地震','COVID','武漢','感染症対応','大規模災害','被災','能登','令和6年能登','令和8年','千葉水害','水害','土砂災害'];
 const RETSUJO=['まず、','次に、','さらに、','加えて、','また、','最後に、'];
-const TEINEI=['と考えております','と感じております','と思っております','てまいりたい','していきたいと思','できるよう努め'];
+const TEINEI=['と考えております','と感じております','と思っております','てまいりたい','していきたいと思','できるよう努め','と考えています','と感じています','と思っています'];
 const CHUSHO=['貢献','活躍','発展','推進','向上','尽力'];
-const LIMIT_W=['不十分','足りない','不足','限界','ベーシック','基礎的','できない','わからない','及ばな'];
+const LIMIT_W=['不十分','足りない','不足','限界','ベーシック','基礎的','できない','わからない','及ばな','十分ではな','踏まえきれ','関わることができ','対応しきれ','経験がまだ'];
 const REASON_W=['そのため','ためには','からこそ','それゆえ','であるから'];
 const KONKEI=[/20\d\d年/g,/令和\d+年/g,/平成\d+年/g,/\d+年目/g,/\d+年間/g,/\d+か月/g,/\d+ヶ月/g,/\d+例/g,/\d+人/g];
 
@@ -224,14 +225,14 @@ const ACMTS=[
    '役職か勤務先の記載はあります。経験年数や取得資格（MCLS・JPTEC等）を加えると読み手が「この人は誰か」を判断しやすくなります。',
    '主要情報は揃っています。取得資格（MCLS・JPTEC等）や活動歴があれば追加すると補強できます。',
    '実績提示として十分です。'],
-  ['「あなたが災害医療に向き合おうとした最初の瞬間」を1文で書いてみてください。その瞬間が、なぜ今DMATでなければならないかの答えになります。',
+  ['「あなたが災害対応に向き合おうとした最初の瞬間」を1文で書いてみてください。医師・看護師に限らず、現場に関われなかった経験や、業務の中で感じた限界も原体験になります。',
    '必要性への言及はありますが論拠が薄い。「現在できていないこと」と「DMATで解決できること」を対比させてください。',
    '論拠の骨格はあります。「DMATの実践的継続トレーニングで具体的に何を習得したいか」をもう少し明示できます。',
    '論拠として成立しています。'],
   ['将来ビジョンが読み取れません。キャリアプランに「DMAT取得後の最初の1年で何をしたいか」を書いてみてください。',
    '方向性は示されています。「目指すゴールは〜だ」という最終到達点を冒頭か末尾で1文宣言するとさらに明確になります。',
    '段階の記述はあります。「目指すゴールは〜だ」という最終到達点を冒頭か末尾で1文宣言するとさらに明確になります。',
-   '将来像として機能しています。'],
+   '将来像として機能しています。その先に、DMATとしてチームを率いる立場が見えると、キャリアの一貫性がさらに増します。'],
   ['「誰のために・何のために」という視点が薄いです。具体的な還元先を1文追加してください。',
    '還元への意識はあります。具体的な還元先（自施設・地域・後進育成等）を明示してください。',
    '還元先は書かれています。「どのように還元するか」をもう少し具体化できます。',
@@ -255,7 +256,7 @@ function autoScore(t1,t2){
   // ②実績 - 「〜として」パターンで職種を汎用検出
   const qHits=QUALIF_SHORT.filter(q=>t1l.includes(q)).length;
   const hasYrs=/\d+年目|\d+年間/.test(t1l);
-  const hasRole=/\S{1,10}として/.test(t1l);
+  const hasRole=/[一-龠ぁ-んァ-ヶーA-Za-z]{1,10}として/.test(t1l);
   const hasFacility=['センター','病院','クリニック','救急','ICU','ER','当院','自院','診療科'].some(k=>t1l.includes(k));
   let s1=0;
   if(qHits>0&&hasYrs&&hasRole) s1=3;
@@ -282,14 +283,16 @@ function autoScore(t1,t2){
     else if(['目指','貢献','活動したい'].some(w=>t2l.includes(w))||hasAction) s3=1;
   }
 
-  // ⑤還元視点
-  const all=t1l+' '+t2l;
-  const tgts=['自施設','地域','後進','次世代','自院','病院'].filter(k=>all.includes(k)).length;
-  const hows=['育成','体制','教育','訓練','指導','整備','構築'].filter(k=>all.includes(k)).length;
+  // ⑤還元視点（キャリアプランに記述がある場合のみ判定）
   let s4=0;
-  if(tgts>=2&&hows>=1) s4=3;
-  else if(tgts>=1||hows>=1) s4=2;
-  else if(all.includes('還元')||all.includes('貢献')) s4=1;
+  if(t2l.length>0){
+    const all=t1l+' '+t2l;
+    const tgts=['自施設','地域','後進','次世代','自院','病院'].filter(k=>all.includes(k)).length;
+    const hows=['育成','体制','教育','訓練','指導','整備','構築'].filter(k=>all.includes(k)).length;
+    if(tgts>=2&&hows>=1) s4=3;
+    else if(tgts>=1||hows>=1) s4=2;
+    else if(all.includes('還元')||all.includes('貢献')) s4=1;
+  }
 
   return [s0,s1,s2,s3,s4];
 }
@@ -374,7 +377,7 @@ function checkOverlap(t1,t2){
   }
   if(allA.length>0){
     msgs.push({cls:'ov-yel',title:'役職・資格名は手段です',
-      body:'「'+allA.join('」「')+'」は将来のキャリアステップです。受講希望理由には「その先に何を実現したいか」という動機の核心を書きましょう。',
+      body:'「'+allA.join('」「')+'」は将来のキャリアステップです。受講希望理由には「その先に何を実現したいか」という動機の核心を書きましょう。同時に、それはあなたが所属先でチームを率いる立場に近づいていく道筋でもあります。',
       note:''});
   }
   if(t1.includes('還元')&&t2.includes('還元')){
@@ -449,7 +452,8 @@ function refreshMono(t1,t2){
     var icon=s.t==='p'?'＋':s.t==='n'?'－':'！';
     return '<div class="sig sig-'+s.t+'"><span class="sig-i">'+icon+'</span>'+s.m+'</div>';
   }).join('');
-  var charColor=totalLen>=900?'#27ae60':totalLen>=700?'#e67e22':'#e74c3c';
+  var overLimit=t1len>500||t2len>500||totalLen>1000;
+  var charColor=overLimit?'#e74c3c':totalLen>=900?'#27ae60':totalLen>=700?'#e67e22':'#e74c3c';
   var hints=[];
   if(!QUALIF_ALL.some(function(q){return combined.includes(q);}))
     hints.push('資格名・災害名（MCLS・JPTEC・東日本大震災など）を入れるとスコアが上がります');
@@ -477,33 +481,44 @@ function refreshMono(t1,t2){
     +'<span style="color:#0d2540;font-weight:700">'+t2len+'字</span><span>（キャリア）＝</span>'
     +'<span style="color:'+charColor+';font-weight:700">'+totalLen+'字</span>'
     +'<span style="color:#ccc">/ 1,000字</span>'
+    +(overLimit?'<span style="color:#e74c3c;font-weight:700;margin-left:4px">（上限超過）</span>':'')
     +'</div>'
     +'<div class="sigs">'+sigsHtml+'</div>'
     +'<div class="sigs" style="margin-top:5px">'+hintsHtml+'</div>';
 }
 
 // ── イベント ─────────────────────────────────────
+var MIN_CHARS=30;
+
 function onInput(){
   var t1=document.getElementById('t1').value.trim();
   var t2=document.getElementById('t2').value.trim();
   ['1','2'].forEach(function(n){
-    var v=document.getElementById('t'+n).value;
+    var v=document.getElementById('t'+n).value.trim();
     var e=document.getElementById('cc'+n);
     e.textContent=v.length+' / 500字';
     e.className='cc'+(v.length>500?' over':v.length>450?' warn':'');
   });
-  if(!t1){
-    document.getElementById('axscores').innerHTML='<div class="r-empty">文章を入力すると自動で判定します</div>';
+  if(t1.length<MIN_CHARS){
+    var remain=MIN_CHARS-t1.length;
+    var msg=t1.length===0
+      ? '文章を入力すると自動で判定します'
+      : '判定にはあと'+remain+'字ほど必要です（現在'+t1.length+'字）';
+    document.getElementById('axscores').innerHTML='<div class="r-empty">'+msg+'</div>';
     document.getElementById('totn').textContent='—';
     document.getElementById('totf').style.width='0%';
     if(chart){chart.data.datasets[1].data=[0,0,0,0,0];chart.update();}
-    document.getElementById('ovlp-body').innerHTML='<div class="ov-empty">両方の文章を入力すると整合チェックを行います</div>';
+    document.getElementById('ovlp-body').innerHTML='<div class="ov-empty">受講希望理由・キャリアプランともに、ある程度の分量を書いてから整合チェックを行います</div>';
     document.getElementById('mono-body').innerHTML='<div class="m-empty">文章を入力すると物語度を計算します</div>';
     return;
   }
   var sc=autoScore(t1,t2);
   refreshRadar(sc);
-  checkOverlap(t1,t2);
+  if(t2.length<MIN_CHARS){
+    document.getElementById('ovlp-body').innerHTML='<div class="ov-empty">キャリアプランがあと'+(MIN_CHARS-t2.length)+'字ほど必要です</div>';
+  } else {
+    checkOverlap(t1,t2);
+  }
   refreshMono(t1,t2);
 }
 
