@@ -16,7 +16,7 @@
 
 ## 使い方
 
-1. ブラウザでhttps://hdmg2004-ux.github.io/dmat-application-checker/を開く
+1. ブラウザでhttps://hdmg2004-ux.github.io/dmat-application-checker/　を開く
 2. **受講希望理由**（500字以内）を入力
 3. **キャリアプラン**（500字以内）を入力
 4. 入力と同時に以下の3つの診断が自動で更新される
