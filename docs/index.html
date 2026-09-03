@@ -287,7 +287,7 @@ function autoScore(t1,t2){
   let s4=0;
   if(t2l.length>0){
     const all=t1l+' '+t2l;
-    const tgts=['自施設','地域','後進','次世代','自院','病院'].filter(k=>all.includes(k)).length;
+    const tgts=['自施設','地域','後進','次世代','自院','病院','院内','市','医療機関'].filter(k=>all.includes(k)).length;
     const hows=['育成','体制','教育','訓練','指導','整備','構築'].filter(k=>all.includes(k)).length;
     if(tgts>=2&&hows>=1) s4=3;
     else if(tgts>=1||hows>=1) s4=2;
